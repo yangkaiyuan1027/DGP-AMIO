@@ -24,7 +24,7 @@ can also be integrated as long as the data is provided. Known disease genes are 
 in the ```diseases``` folder, so that you can directly run DGP-AMIO.
 
 ## Run DGP-AMIO 
-If you want to run DGP-AMIO for disease gene prediction, you simply run:
+If you want to run DGP-AMIO for disease gene prediction, simply run:
 ```
 python DGP-AMIO.py <disease name>
 ```

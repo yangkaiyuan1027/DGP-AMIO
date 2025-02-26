@@ -29,6 +29,7 @@ If you want to run DGP-AMIO for disease gene prediction, simply run:
 python DGP-AMIO.py <disease name>
 ```
 For example, ``` python DGP-AMIO.py asthma```
+
 ```DGP-AMIO.py``` does the following:
 * Data preproccessing, and integrate gene interaction networks with omics and labels
 * Train DGP-AMIO based on 5-fold cross validation and save the trained models

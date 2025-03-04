@@ -18,6 +18,7 @@ import scanpy as sc
 disease = '/'+sys.argv[1]
 
 def data_process():
+    # Readin and integration of gene interaction networks from different databases
     databases=['RegNetwork','trrust','JASPAR','MOTIFMAP','EVEX','CHEA','string','CPDB','IREF']
     edges = pd.read_csv('./graphs/edges_kegg.csv')
     edges = edges.dropna()
@@ -29,14 +30,14 @@ def data_process():
         graph = graph.drop_duplicates()  # remove the repeated edges
         graph[name] = np.ones(len(graph.index))
         edges = pd.merge(edges, graph, on=['source', 'target'], how='outer')
-    edges.fillna(0, inplace=True)
+    edges.fillna(0, inplace=True) # generation of edge features
 
     print("Number of edges before reprocessing:",len(edges.values))
 
     genes = np.union1d(edges.values[:,0],edges.values[:,1])
     print("Number of genes（nodes）in the graph:",len(genes))
 
-    # expression data from GEO
+    # Readin and preprocessing of expression data
     expression = pd.read_csv('diseases'+disease+disease+'_expression.csv',index_col=0)
     expression = expression.groupby('Gene').mean()
     expression = expression[expression.apply(np.sum, axis=1) != 0]  # drop the zero-expression data
@@ -97,26 +98,28 @@ def data_process():
     X = torch.from_numpy(X).to(torch.float32)
     edge_feature = torch.from_numpy(edge_feature).to(torch.float32)
 
+    # inverse graph
     edge_new1 = torch.empty(edge_index.shape)
     edge_new1 = edge_new1.to(torch.long)
     edge_new1[[0, 1], :] = edge_index[[1, 0], :]
 
+    # bidirectional graph
     edge_new2 = torch.cat((edge_index,edge_new1), dim=1)
     edge_new2 = torch.unique(edge_new2, dim=1)
 
     return genes, mapping, X, edge_index, edge_new1, edge_new2, edge_feature
 
 def data_split(genes):
-    # train and test split
+    # readin of disease genes
     label_gene = pd.read_csv('diseases'+disease+disease+'_gene.csv',index_col=0)
 
-    # filter the labeled genes not in the graph
+    # filter the disease genes not in the graph
     label_gene = label_gene.loc[np.intersect1d(label_gene.index, genes)]
     known_target_genes = label_gene.index.values
 
     zero_gene = np.setdiff1d(genes, label_gene.index)
     random.seed(1)
-    sample_zero_gene = random.sample(list(zero_gene), len(label_gene.index))
+    sample_zero_gene = random.sample(list(zero_gene), len(label_gene.index)) # sample non-disease genes
     for gene in sample_zero_gene:
         new_line = pd.DataFrame({'Label': 0}, index=[gene])
         label_gene = label_gene.append(new_line)
@@ -198,7 +201,7 @@ if __name__ == '__main__':
     print("AUROC:", roc_auc)
     print("AUPR:", AUPR)
 
-    # Save results
+    # Save prediction results
     df = pd.DataFrame(columns=['Gene', 'Pred_p'])
     df['Gene'] = genes
     df['Pred_p'] = preds_p_mean.cpu()

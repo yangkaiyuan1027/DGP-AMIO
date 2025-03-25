@@ -43,4 +43,7 @@ For example, ``` python DGP-AMIO.py asthma```
 * If you want to use your own expression data, please organize the data in a CSV file named ```<disease name>_expression.csv``` where the first column is the gene names and place it in the folder of the corresponding disease. The code can run without any modification. If you want to use other omics or integrate multiomics simultaneously, you need to replace the expression data with your own data and make necessary modifications to the data reading part of ```DGP-AMIO.py``` to ensure its proper execution
 * If you want to use other labeled data, just replace the ```<disease name>_gene.csv``` with your own labeled data
 * If you want to train DGP-AMIO and make predictions of a new disease, you need to create ```diseases/<disease name>``` folder and place the prepared omics data and known disease genes in it
-* Note that when preparing your own data, please represent genes in all your data files with gene symbols.  
+* Note that when preparing your own data, please represent genes in all your data files with gene symbols.
+
+## Zenodo
+We also published the code and data of DGP-AMIO on Zenodo. You can view and download them via the DOI: 10.5281/zenodo.15081814

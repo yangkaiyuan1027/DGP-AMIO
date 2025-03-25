@@ -46,4 +46,4 @@ For example, ``` python DGP-AMIO.py asthma```
 * Note that when preparing your own data, please represent genes in all your data files with gene symbols.
 
 ## Zenodo
-We also published the code and data of DGP-AMIO on Zenodo. You can view and download them via the DOI: 10.5281/zenodo.15081814
+We also published the code and data of DGP-AMIO on Zenodo. You can view and download them at [10.5281/zenodo.15081814](https://zenodo.org/records/15081814)
